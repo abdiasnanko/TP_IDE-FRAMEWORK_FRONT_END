@@ -1,0 +1,81 @@
+[
+  {
+    "id": 1,
+    "categorie": "F1",
+    "libelle": "Qui est surnommé The Michael ?",
+    "options": ["Hamilton", "Schumacher", "Senna", "Verstappen"],
+    "bonne_reponse": "Schumacher"
+  },
+
+  {
+    "id": 2,
+    "categorie": "NBA",
+    "libelle": "Quelle équipe possède LeBron James ?",
+    "options": ["Lakers", "Bulls", "Celtics", "Heat"],
+    "bonne_reponse": "Lakers"
+  },
+
+  {
+    "id": 3,
+    "categorie": "Anime",
+    "libelle": "Qui est le héros de Naruto ?",
+    "options": ["Sasuke", "Naruto", "Luffy", "Goku"],
+    "bonne_reponse": "Naruto"
+  },
+
+  {
+    "id": 4,
+    "categorie": "Moto GP",
+    "libelle": "Quel pilote est surnommé The Doctor ?",
+    "options": ["Marquez", "Rossi", "Bagnaia", "Lorenzo"],
+    "bonne_reponse": "Rossi"
+  },
+
+  {
+    "id": 5,
+    "categorie": "NBA",
+    "libelle": "Quelle franchise a remporté le plus de titres NBA ?",
+    "options": ["Lakers", "Celtics", "Warriors", "Bulls"],
+    "bonne_reponse": "Celtics"
+  },
+
+  {
+    "id": 6,
+    "categorie": "Anime",
+    "libelle": "Qui est le capitaine des Mugiwara dans One Piece ?",
+    "options": ["Zoro", "Sanji", "Luffy", "Ace"],
+    "bonne_reponse": "Luffy"
+  },
+
+  {
+    "id": 7,
+    "categorie": "F1",
+    "libelle": "Quelle écurie utilise le cheval cabré comme logo ?",
+    "options": ["Mercedes", "Ferrari", "McLaren", "Red Bull"],
+    "bonne_reponse": "Ferrari"
+  },
+
+  {
+    "id": 8,
+    "categorie": "Anime",
+    "libelle": "Quel est le nom du carnet dans Death Note ?",
+    "options": ["Dark Book", "Death Note", "Shinigami Book", "Shadow Note"],
+    "bonne_reponse": "Death Note"
+  },
+
+  {
+    "id": 9,
+    "categorie": "NBA",
+    "libelle": "Quel joueur est surnommé The King ?",
+    "options": ["Jordan", "Bryant", "LeBron James", "Curry"],
+    "bonne_reponse": "LeBron James"
+  },
+
+  {
+    "id": 10,
+    "categorie": "F1",
+    "libelle": "Quel pilote néerlandais domine actuellement la F1 ?",
+    "options": ["Hamilton", "Alonso", "Verstappen", "Perez"],
+    "bonne_reponse": "Verstappen"
+  }
+]

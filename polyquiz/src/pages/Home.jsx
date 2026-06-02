@@ -1,53 +1,56 @@
-import {
-  useContext,
-  useState
-} from "react";
-
-import {
-  useNavigate
-} from "react-router-dom";
-
-import {
-  UserContext
-} from "../context/UserContext";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 function Home() {
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const { setPseudo } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  const [name, setName] =
-    useState("");
+  async function handleLogin() {
 
-  const { setPseudo } =
-    useContext(UserContext);
+    // Vérification de base
+    if (!name.trim()) {
+      setError("Entre un pseudo pour commencer !");
+      return;
+    }
 
-  const navigate =
-    useNavigate();
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo: name })
+      });
 
-  function handleLogin() {
+      const data = await response.json();
 
-    setPseudo(name);
+      // Stocker le token JWT dans localStorage
+      localStorage.setItem("token", data.token);
 
-    navigate("/quiz");
+      // ✅ Correction : c'est data.user.pseudo et non data.pseudo
+      setPseudo(data.user.pseudo);
+
+      navigate("/quiz");
+
+    } catch (err) {
+      setError("Erreur de connexion au serveur.");
+      console.error(err);
+    }
   }
 
   return (
-
     <div>
-
-      <h1>PolyQuiz</h1>
-
+      <h1>🎮 PolyQuiz</h1>
       <input
         type="text"
-        placeholder="Pseudo"
+        placeholder="Entre ton pseudo"
         value={name}
-        onChange={(e) =>
-          setName(e.target.value)
-        }
+        onChange={(e) => setName(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleLogin()}
       />
-
-      <button onClick={handleLogin}>
-        Commencer
-      </button>
-
+      <button onClick={handleLogin}>Commencer</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }

@@ -19,81 +19,88 @@ import {
 
 function QuizEngine() {
 
-  const {
-    data: questions,
-    loading,
-    error
-  } = useFetch("/questions.json");
+  // ✅ On récupère data brut depuis l'API
+  const { data, loading, error } = useFetch("http://localhost:5000/api/questions");
+
+  // ✅ Correction : on extrait le tableau questions depuis data.questions
+  const questions = data?.questions || [];
 
   const [state, dispatch] =
-    useReducer(
-      quizReducer,
-      initialState
-    );
+    useReducer(quizReducer, initialState);
 
   const [timeLeft, setTimeLeft] =
     useState(60);
 
   const intervalRef = useRef(null);
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
+
+  // Fonction qui envoie le score au back-end puis redirige
+  async function finishQuiz(finalScore) {
+
+    const token = localStorage.getItem("token");
+
+    try {
+      await fetch("http://localhost:5000/api/users/score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ score: finalScore })
+      });
+    } catch (err) {
+      console.error("Erreur envoi du score :", err);
+    }
+
+    navigate("/resultats", {
+      state: {
+        score: finalScore,
+        total: questions.length
+      }
+    });
+  }
 
   useEffect(() => {
 
-    intervalRef.current =
-      setInterval(() => {
+    intervalRef.current = setInterval(() => {
 
-        setTimeLeft((prev) => {
+      setTimeLeft((prev) => {
 
-          if (prev <= 1) {
+        if (prev <= 1) {
 
-            clearInterval(
-              intervalRef.current
-            );
+          clearInterval(intervalRef.current);
 
-            dispatch({
-              type: "FINISH_QUIZ"
-            });
-      navigate("/resultats", {
-        state: {
-          score: state.score,
-          total: questions.length
+          dispatch({ type: "FINISH_QUIZ" });
+
+          finishQuiz(state.score);
+
+          return 0;
         }
+
+        return prev - 1;
       });
-            return 0;
-          }
 
-          return prev - 1;
-        });
+    }, 1000);
 
-      }, 1000);
-
-    return () =>
-      clearInterval(intervalRef.current);
+    return () => clearInterval(intervalRef.current);
 
   }, []);
 
-  if (loading)
-    return <h1>Chargement...</h1>;
+  if (loading) return <h1>Chargement des questions...</h1>;
 
-  if (error)
-    return <h1>{error}</h1>;
+  if (error) return <h1>Erreur : {error}</h1>;
 
-  const question =
-    questions[state.currentQuestion];
+  // ✅ Si questions est encore vide (API pas encore prête)
+  if (questions.length === 0) return <h1>Chargement des questions...</h1>;
+
+  const question = questions[state.currentQuestion];
 
   if (!question) {
-
-  navigate("/resultats", {
-    state: {
-      score: state.score,
-      total: questions.length
-    }
-  });
-
-  return null;
-}
+    // Toutes les questions répondues → on termine
+    finishQuiz(state.score);
+    return null;
+  }
 
   function handleAnswer(option) {
 
@@ -101,8 +108,7 @@ function QuizEngine() {
       type: "ANSWER_QUESTION",
       payload: {
         answer: option,
-        correct:
-          question.bonne_reponse
+        correct: question.correctAnswer
       }
     });
   }
@@ -111,24 +117,23 @@ function QuizEngine() {
 
     <div>
 
-      <h1>Temps : {timeLeft}</h1>
+      <h1>⏱️ Temps : {timeLeft}s</h1>
 
-      <h2>{question.libelle}</h2>
+      <h2>
+        Question {state.currentQuestion + 1} / {questions.length}
+      </h2>
+
+      <h2>{question.text}</h2>
 
       {
-        question.options.map(
-          (option) => (
-
-            <button
-              key={option}
-              onClick={() =>
-                handleAnswer(option)
-              }
-            >
-              {option}
-            </button>
-          )
-        )
+        question.options.map((option) => (
+          <button
+            key={option}
+            onClick={() => handleAnswer(option)}
+          >
+            {option}
+          </button>
+        ))
       }
 
     </div>

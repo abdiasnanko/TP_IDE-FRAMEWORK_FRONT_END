@@ -13,6 +13,10 @@ import QuizEngine
 import Results
   from "./pages/Results";
 
+// ✅ Importe la nouvelle page
+import Leaderboard
+  from "./pages/Leaderboard";
+
 import ProtectedRoute
   from "./routes/ProtectedRoute";
 
@@ -33,9 +37,7 @@ function App() {
           path="/quiz"
           element={
             <ProtectedRoute>
-
               <QuizEngine />
-
             </ProtectedRoute>
           }
         />
@@ -44,11 +46,15 @@ function App() {
           path="/resultats"
           element={
             <ProtectedRoute>
-
               <Results />
-
             </ProtectedRoute>
           }
+        />
+
+        {/* ✅ Nouvelle route leaderboard — publique, pas besoin de ProtectedRoute */}
+        <Route
+          path="/leaderboard"
+          element={<Leaderboard />}
         />
 
       </Routes>
